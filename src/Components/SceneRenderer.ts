@@ -36,6 +36,15 @@ export class SceneRenderer {
     const rect:DOMRect = this.renderer.domElement.getBoundingClientRect()
     
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+    
+    const light = new THREE.AmbientLight(0xffffff);
+    this.scene.add(light);
+    
+    this.scene.background =  new THREE.Color(0x87CEEB);
+  //  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  //  directionalLight.position.set(0, 0, 0).normalize();
+  //  this.scene.add(directionalLight);
+    
     console.log("DOM bounding rect--"+JSON.stringify(rect));
 
     console.log("DOM width--"+this.renderer.domElement.width);

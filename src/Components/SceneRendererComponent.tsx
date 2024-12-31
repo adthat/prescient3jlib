@@ -1,9 +1,13 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import React, { use, useEffect, useRef, useState } from 'react';
 import { SceneRenderer } from './SceneRenderer'; // Import your class here
 import { Box } from './Box';
 import { Controller } from './Controller';
 import {MeshState} from './MeshState';
+//import modelUrl from '../models/DamagedHelmet/'
+
 
 const SceneRendererComponent: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement>(null); // Reference to the container div
@@ -36,6 +40,26 @@ const SceneRendererComponent: React.FC = () => {
           controlRef.current =  new Controller(sceneRenderRef.current);//controllerObj;
 
        if(!boxRef.current){
+  
+        var loader = new GLTFLoader();
+       // const dracoLoader = new DRACOLoader();
+        //loader.setDRACOLoader( dracoLoader );
+        loader.load('../../models/DamagedHelmet/DamagedHelmet.gltf', function(gltf) {
+        //loader.load('../../models/sample.gltf', function(gltf) {
+          sceneRenderRef.current?.getScene().add(gltf.scene);
+          gltf.scene.scale.set(1, 1, 1);  // Scale the model if necessary
+          gltf.scene.position.set(0, 0, 0);  // Position the model if necessary
+          gltf.scene.traverse((child) => {
+            if (child.isObject3D) {
+              console.log("Child:"+JSON.stringify(child));
+              child.userData = { clickable: true }; // Add a custom property to indicate the mesh is clickable
+            }
+          });
+        }, undefined, function(error) {
+          console.error(error);
+        });
+
+/*
         boxRef.current = new Box(null,2,2,2);
         boxRef.current.setPosition(2,0,-2)
         boxRef.current.setName("1");
@@ -53,7 +77,7 @@ const SceneRendererComponent: React.FC = () => {
         boxRef.current.setName("3");
         sceneRenderRef.current.addMesh(boxRef.current)
 
-/*         var lgeo = new THREE.LineBasicMaterial({ color: 0xffffff });
+         var lgeo = new THREE.LineBasicMaterial({ color: 0xffffff });
         lgeo.linewidth = 5;
         var egh = new THREE.EdgesGeometry(boxRef.current.geometry);
         const edges = new THREE.LineSegments(egh, lgeo);
@@ -76,7 +100,7 @@ const SceneRendererComponent: React.FC = () => {
       //sceneRenderer.addMesh(boxRef.current);
       return () => {
         //boxRef.current.dispose()
-        //sceneRenderer.cleanup();
+        sceneRenderRef.current?.cleanup();
         console.log("Rendercomponent UNMOUNT");
       };
     
@@ -86,17 +110,7 @@ const SceneRendererComponent: React.FC = () => {
 
  // console.log("in onpointerdown");
   controlRef.current?.onMouseClick(event);
- /*  if(controlRef.current?.selectedObject){
-    if(controlRef.current.selectedObject instanceof THREE.Mesh){
-                var b:Box = new Box(controlRef.current.selectedObject) ;
-                //boxTempRef.current = b;
-                b.updateMaterial(0x00ffff);
-                //b.material.color.set(0x00ffff);
-               // console.log("Mesh-"+ JSON.stringify(b));//+"---"+JSON.stringify(this.selectedObject));
-                console.log(b.getMesh().name)
-                
-              }
-        } */
+ 
  }
 
  useEffect(()=>{
@@ -126,6 +140,9 @@ const SceneRendererComponent: React.FC = () => {
         }
      
  },[IsWireframe]) */
+ function onGround(){
+
+ }
  function onTryClickWireFrame(){
   //setIsWireframe(!IsWireframe);
   var w:boolean  = !state.wireframe;
@@ -173,6 +190,7 @@ const SceneRendererComponent: React.FC = () => {
     <div className="buttons">
       <button  onClick={(event)=>onTryClick()}>Try Color</button>
       <button  onClick={(event)=>onTryClickWireFrame()}>Try Wireframe</button>
+      <button   onClick={(event)=>onGround()}>Ground</button>
     </div>
    {/*  <div className="buttons"> </div> */}
     </div>
