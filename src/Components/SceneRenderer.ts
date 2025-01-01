@@ -107,6 +107,19 @@ export class SceneRenderer {
   };*/
 
 
+   zoomIn = () => {
+    if (this.camera.fov > 10) {
+      this.camera.fov -= 2; // Narrow FOV for zooming in
+      this.camera.updateProjectionMatrix();
+    }
+  };
+  
+   zoomOut = () => {
+    if (this.camera.fov < 80) {
+      this.camera.fov += 2; // Widen FOV for zooming out
+      this.camera.updateProjectionMatrix();
+    }
+  };
   getScene(){
     return this.scene;
   }

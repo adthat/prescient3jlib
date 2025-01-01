@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { SceneRenderer } from "./SceneRenderer";
 import { Box } from './Box';
 import {MeshState} from './MeshState';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export class Controller{
 
@@ -140,7 +141,7 @@ public needsUpdate:any = true;
         this.raycaster.setFromCamera(this.mouse, this.camera);
     
         // Check if the ray intersects with the box
-        const intersects = this.raycaster.intersectObjects(this.sceneRender.objects);
+        const intersects = this.raycaster.intersectObjects(this.sceneRender.getScene().children,true);
     
         if (intersects.length > 0) {
           
@@ -150,10 +151,14 @@ public needsUpdate:any = true;
           console.log(typeof(this.selectedObject))
           
           if(this.selectedObject instanceof THREE.Mesh){
-            var b:Box = new Box(this.selectedObject) ;
-            b.updateMaterial(0x00ffff);
+           /*  var b:Box = new Box(this.selectedObject) ;
+            b.updateMaterial(0x00ffff); */
+            
+            let mesh1 = this.selectedObject;
+            console.log("Clicked-"+JSON.stringify(mesh1))
+            mesh1.material.color.setHex(0xff0000);
            // console.log("Mesh-"+ JSON.stringify(b));//+"---"+JSON.stringify(this.selectedObject));
-            console.log(b.getMesh().name)
+            //console.log(b.getMesh().name)
             
           }
           this.selectObjectIndex++;
@@ -177,6 +182,16 @@ public needsUpdate:any = true;
       };
     
 
+      handleModel(gltf:GLTF){
+        gltf.scene.scale.set(1, 1, 1);  // Scale the model if necessary
+        gltf.scene.position.set(0, 0, 0);  // Position the model if necessary
+        gltf.scene.traverse((child) => {
+          if (child.isObject3D) {
+            //console.log("Child:"+JSON.stringify(child));
+            child.userData = { clickable: true }; // Add a custom property to indicate the mesh is clickable
+          }
+        });
+      }
       getSelectedObject(){
         return this.selectedObject;
       }

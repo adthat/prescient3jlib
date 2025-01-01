@@ -6,7 +6,7 @@ import { SceneRenderer } from './SceneRenderer'; // Import your class here
 import { Box } from './Box';
 import { Controller } from './Controller';
 import {MeshState} from './MeshState';
-//import modelUrl from '../models/DamagedHelmet/'
+//import modelUrl from '../../public/models/DamagedHelmet
 
 
 const SceneRendererComponent: React.FC = () => {
@@ -44,17 +44,12 @@ const SceneRendererComponent: React.FC = () => {
         var loader = new GLTFLoader();
        // const dracoLoader = new DRACOLoader();
         //loader.setDRACOLoader( dracoLoader );
-        loader.load('../../models/DamagedHelmet/DamagedHelmet.gltf', function(gltf) {
-        //loader.load('../../models/sample.gltf', function(gltf) {
+        //loader.load('../../models/1976_volkswagen_golf_gti_mk1/scene.gltf', function(gltf) {
+        //loader.load('../../models/DamagedHelmet/DamagedHelmet.gltf', function(gltf) {
+        loader.load('../../models/Flower.glb', function(gltf) {
           sceneRenderRef.current?.getScene().add(gltf.scene);
-          gltf.scene.scale.set(1, 1, 1);  // Scale the model if necessary
-          gltf.scene.position.set(0, 0, 0);  // Position the model if necessary
-          gltf.scene.traverse((child) => {
-            if (child.isObject3D) {
-              console.log("Child:"+JSON.stringify(child));
-              child.userData = { clickable: true }; // Add a custom property to indicate the mesh is clickable
-            }
-          });
+          controlRef.current?.handleModel(gltf);
+        
         }, undefined, function(error) {
           console.error(error);
         });
@@ -143,6 +138,13 @@ const SceneRendererComponent: React.FC = () => {
  function onGround(){
 
  }
+ function onZoomIn(){
+
+  sceneRenderRef.current?.zoomIn();
+ }
+ function onZoomOut(){
+sceneRenderRef.current?.zoomOut();
+ }
  function onTryClickWireFrame(){
   //setIsWireframe(!IsWireframe);
   var w:boolean  = !state.wireframe;
@@ -191,6 +193,8 @@ const SceneRendererComponent: React.FC = () => {
       <button  onClick={(event)=>onTryClick()}>Try Color</button>
       <button  onClick={(event)=>onTryClickWireFrame()}>Try Wireframe</button>
       <button   onClick={(event)=>onGround()}>Ground</button>
+      <button   onClick={(event)=>onZoomIn()}>Zoom In</button>
+      <button   onClick={(event)=>onZoomOut()}>Zoom Out</button>
     </div>
    {/*  <div className="buttons"> </div> */}
     </div>
