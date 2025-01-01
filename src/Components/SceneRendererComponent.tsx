@@ -133,8 +133,9 @@ const SceneRendererComponent: React.FC = () => {
  }
   function onTryClick(){
     console.log("onTryClick"+color);
+    let color1 = state.color+200;
     //event.preventDefault();    
-    setState(prevState=>({...prevState,color:color+100}));
+    setState(prevState=>({...prevState,color:color1}));
     //setColor(color+100);
     /* if(boxRef.current){
       boxRef.current.updateMaterial(0x0fff00)

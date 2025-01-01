@@ -10,7 +10,7 @@ private scene:any;
 private element:any;
 private camera:any;
 public mouseoverObject:any;
-public selectedObject:any[];
+public selectedObject:any;
 private mouse:THREE.Vector2;
 public raycaster: THREE.Raycaster;
 public selectObjectIndex:number;
@@ -39,7 +39,7 @@ public needsUpdate:any = true;
         this.mouse = new THREE.Vector2();
         this.raycaster = new THREE.Raycaster();
         this.selectObjectIndex= 0;
-        this.selectedObject = [];
+        this.selectedObject = null;
         //window.addEventListener('click', this.onMouseClick);
         
     //    this.sceneRender.renderer.domElement.addEventListener('pointerdown',this.onMouseClick);
@@ -66,10 +66,10 @@ public needsUpdate:any = true;
   }
   
   updateState(state:MeshState){
-    if(this.selectedObject[this.selectObjectIndex]){
+    if(this.selectedObject){
       console.log("IN COLOR CHANGE- selected object found-"+JSON.stringify(state));
-      if(this.selectedObject[this.selectObjectIndex] instanceof THREE.Mesh){
-                  var b:Box = new Box(this.selectedObject[this.selectObjectIndex]) ;
+      if(this.selectedObject instanceof THREE.Mesh){
+                  var b:Box = new Box(this.selectedObject) ;
                   //boxTempRef.current = b;
                   b.updateMaterial(state.color);
                   b.updateMaterialWireFrame(state.wireframe);
@@ -146,39 +146,39 @@ public needsUpdate:any = true;
           
           //setIsBoxClicked(true); // Set state when box is clicked
           console.log('Box clicked-'+ intersects[0].object.name);
-          this.selectedObject[this.selectObjectIndex] = intersects[0].object ;
-          console.log(typeof(this.selectedObject[this.selectObjectIndex]))
+          this.selectedObject = intersects[0].object ;
+          console.log(typeof(this.selectedObject))
           
-          if(this.selectedObject[this.selectObjectIndex] instanceof THREE.Mesh){
-            var b:Box = new Box(this.selectedObject[this.selectObjectIndex]) ;
+          if(this.selectedObject instanceof THREE.Mesh){
+            var b:Box = new Box(this.selectedObject) ;
             b.updateMaterial(0x00ffff);
            // console.log("Mesh-"+ JSON.stringify(b));//+"---"+JSON.stringify(this.selectedObject));
             console.log(b.getMesh().name)
             
           }
-          this.selectObjectIndex++;
+          //this.selectObjectIndex++;
         }
         else{
            // this.selectedObject = null
-           for(let i=0;i<this.selectObjectIndex;i++){
-            if(this.selectedObject[i] instanceof THREE.Mesh){
-              var b:Box = new Box(this.selectedObject[i]) ;
-              b.resetColor();
-             this.selectedObject[i] = null;    
-             }
-           }
-           this.selectObjectIndex = 0;
+           
+          //   if(this.selectedObject instanceof THREE.Mesh){
+          //     var b:Box = new Box(this.selectedObject) ;
+          //     b.resetColor();
+          //    this.selectedObject = null;    
+          //    }
+            }
+           //this.selectObjectIndex = 0;
             
             console.log('unclicked- '+intersects.length);
             //console.log(JSON.stringify(this.selectedObject))
         }
  //       this.sceneRender.animate()
         
-      };
+      
     
 
       getSelectedObject(){
-        return this.selectedObject[this.selectObjectIndex];
+        return this.selectedObject;
       }
 }
 
